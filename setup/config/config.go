@@ -22,7 +22,7 @@ type NwConfig struct {
 		DbType string `env:"DB_TYPE" validate:"required,oneof=sqlite3 mysql mariadb postgresql"`
 
 		Sqlite struct {
-			Dsn string `env:"DB_SQLITE_PATH" validate:"required_if=DbType sqlite3"`
+			Dsn string `env:"DB_SQLITE_DSN" validate:"required_if=DbType sqlite3"`
 		}
 
 		Mysql struct {
@@ -139,7 +139,7 @@ func (nwConfig *NwConfig) Setup() {
 // Load : Read configuration from file or environment variables.
 func (nwConfig *NwConfig) Load() {
 	// Define config feeder
-	feeder1 := feeder.DotEnv{Path: "./.env"}
+	feeder1 := feeder.DotEnv{Path: ".env"}
 	feeder2 := feeder.Env{}
 
 	// Read config file
