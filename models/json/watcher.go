@@ -251,7 +251,7 @@ func (w Watcher) RunDatabaseWatcher() (err error) {
 	}
 
 	// Test if something changed since the last check
-	if len(resp.Results) > 0 && (dw.LastRecordProccesed != resp.Results[0].ID || dw.LastTimeChecked.Time != resp.Results[0].LastEditedTime) {
+	if len(resp.Results) > 0 && (dw.LastRecordProccesed != resp.Results[0].ID || !dw.LastTimeChecked.Time.After(resp.Results[0].LastEditedTime)) {
 		for {
 			query.PageSize = 60
 			resp, err = client.QueryDatabase(context.Background(), dw.Database.UUID, query)
