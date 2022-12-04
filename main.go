@@ -1,15 +1,15 @@
 package main
 
 import (
-	"github.com/gennesseaux/NotionWatcher/services"
-	nwWatcher "github.com/gennesseaux/NotionWatcher/setup/watcher"
+	"github.com/gennesseaux/NotionWatcher/cmd"
+	"os"
 
+	// Call implicit init methods
 	_ "github.com/gennesseaux/NotionWatcher/setup"
 )
 
 func main() {
-	watchers := nwWatcher.Watcher
-	watcherService := services.NewWatcherService(watchers.Watchers)
-	watcherService.Run()
-	watcherService.Watch()
+	if err := cmd.Execute(); err != nil {
+		os.Exit(1)
+	}
 }

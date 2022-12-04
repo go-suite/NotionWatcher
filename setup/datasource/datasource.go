@@ -1,26 +1,23 @@
 package datasource
 
 import (
+	"context"
 	"database/sql"
-	"gorm.io/driver/postgres"
-	"moul.io/zapgorm2"
-	"time"
-
-	dbModels "github.com/gennesseaux/NotionWatcher/models/db"
+	wdb "github.com/gennesseaux/NotionWatcher/common/db"
 	nwConfig "github.com/gennesseaux/NotionWatcher/setup/config"
-	nwLogger "github.com/gennesseaux/NotionWatcher/setup/logger"
-
-	"go.uber.org/zap"
+	loggorm "github.com/go-mods/zerolog-gorm"
+	log "github.com/go-mods/zerolog-quick"
+	"github.com/rs/zerolog"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"time"
 )
 
 // Datasource :
 var Datasource *NwDatasource
-
-// logger : logger
-var logger = nwLogger.Logger
 
 // config : config
 var config = nwConfig.Config
@@ -31,44 +28,63 @@ type NwDatasource struct {
 }
 
 func init() {
-	logger.Info("Connecting to database")
 
 	var db *gorm.DB
 	var sqlDb *sql.DB
 	var err error
 
-	gormLogger := zapgorm2.New(logger)
+	// file writer
+	fileWriter := &lumberjack.Logger{
+		Filename:   config.LogFile.Filename,
+		MaxSize:    config.LogFile.MaxSize,
+		MaxBackups: config.LogFile.MaxBackups,
+		MaxAge:     config.LogFile.MaxAge,
+		Compress:   config.LogFile.Compress,
+	}
 
-	if config.Database.DbType == "sqlite3" {
-		db, err = gorm.Open(sqlite.Open(config.Database.Sqlite.Dsn), &gorm.Config{Logger: gormLogger})
+	// gorm logger
+	gormLogger := zerolog.New(fileWriter).
+		Level(zerolog.TraceLevel).
+		With().
+		Timestamp().
+		Logger()
+
+	// gorm config
+	gormConfig := gorm.Config{Logger: &loggorm.GormLogger{}}
+
+	if config.Database.DbType == nwConfig.Sqlite3 {
+		db, err = gorm.Open(sqlite.Open(config.Database.Sqlite.Dsn), &gormConfig)
 		if err != nil {
-			logger.Fatal("cannot connect to db:", zap.Error(err))
+			log.Fatal().Err(err).Msg("cannot connect to Sqlite database")
 		}
 		sqlDb, _ = db.DB()
-	} else if config.Database.DbType == "mysql" {
-		db, err = gorm.Open(mysql.Open(config.Database.Mysql.Dsn), &gorm.Config{Logger: gormLogger})
+	} else if config.Database.DbType == nwConfig.Mysql {
+		db, err = gorm.Open(mysql.Open(config.Database.Mysql.Dsn), &gormConfig)
 		if err != nil {
-			logger.Fatal("cannot connect to db:", zap.Error(err))
+			log.Fatal().Err(err).Msg("cannot connect to Mysql database")
 		}
 		sqlDb, _ = db.DB()
 		sqlDb.SetConnMaxLifetime(time.Minute * 3)
 		sqlDb.SetMaxOpenConns(10)
 		sqlDb.SetMaxIdleConns(10)
-	} else if config.Database.DbType == "mariadb" {
-		db, err = gorm.Open(mysql.Open(config.Database.Mariadb.Dsn), &gorm.Config{Logger: gormLogger})
+	} else if config.Database.DbType == nwConfig.Mariadb {
+		db, err = gorm.Open(mysql.Open(config.Database.Mariadb.Dsn), &gormConfig)
 		if err != nil {
-			logger.Fatal("cannot connect to db:", zap.Error(err))
+			log.Fatal().Err(err).Msg("cannot connect to Mariadb database")
 		}
 		sqlDb, _ = db.DB()
 		sqlDb.SetConnMaxLifetime(time.Minute * 3)
 		sqlDb.SetMaxOpenConns(10)
 		sqlDb.SetMaxIdleConns(10)
-	} else if config.Database.DbType == "postgresql" {
-		db, err = gorm.Open(postgres.Open(config.Database.Postgres.Dsn), &gorm.Config{Logger: gormLogger})
+	} else if config.Database.DbType == nwConfig.Postgresql {
+		db, err = gorm.Open(postgres.Open(config.Database.Postgres.Dsn), &gormConfig)
 		if err != nil {
-			logger.Fatal("cannot connect to db:", zap.Error(err))
+			log.Fatal().Err(err).Msg("cannot connect to Postgresql database")
 		}
 	}
+
+	//
+	db = db.WithContext(gormLogger.WithContext(context.Background()))
 
 	// Enable debug mode while in development
 	if config.Environment == "development" {
@@ -79,17 +95,17 @@ func init() {
 	if sqlDb != nil {
 		err = sqlDb.Ping()
 		if err != nil {
-			logger.Fatal("cannot connect to db:", zap.Error(err))
+			log.Fatal().Err(err).Msg("cannot connect to database")
 		}
 	}
 
 	// Migrate models to database
 	err = db.AutoMigrate(
-		&dbModels.Database{},
-		&dbModels.DatabaseWatcher{},
+		&wdb.Database{},
+		&wdb.DatabaseWatcher{},
 	)
 	if err != nil {
-		logger.Error("cannot migrate database", zap.Error(err))
+		log.Fatal().Err(err).Msg("cannot migrate database")
 	}
 
 	Datasource = &NwDatasource{db: db, sqlDb: sqlDb}

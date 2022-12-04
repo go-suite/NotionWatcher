@@ -1,8 +1,0 @@
-{
-    "name" : "test1",
-    "type" : "pageAddedToDatabase",
-    "database_id": "e0d77614d4834ba2ba108f6efd3a591b",
-    "start_date": "2022-08-30T00:00:00Z",
-    "webhook": "https://webhook.site/6e7e996d-ff22-41ad-a781-2c6ffbb64120",
-    "cron": "* * * * *"
-}

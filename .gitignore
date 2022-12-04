@@ -145,4 +145,7 @@ fabric.properties
 
 .env.example
 .env.production
+*.log
+build/
+data/
 *todo*
