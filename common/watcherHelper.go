@@ -32,7 +32,7 @@ func (w *Watcher) Run() (err error) {
 		}
 		err = w.runDatabaseWatcher()
 		if err != nil {
-			log.WithLevel(zerolog.ErrorLevel).Err(err).Msg("Notion watcher exited!")
+			log.WithLevel(zerolog.ErrorLevel).Err(err).Send()
 			return err
 		}
 		return nil

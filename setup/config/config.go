@@ -197,8 +197,12 @@ func (nwConfig *NwConfig) Load() {
 
 	config := c.New()
 
+	curDir, _ := os.Getwd()
+
 	if _, err := os.Stat(".env"); err == nil {
 		config.AddFeeder(feeder.DotEnv{Path: ".env"})
+	} else {
+		log.Debug().Msgf(".env file not found in %s", curDir)
 	}
 
 	config.AddFeeder(feeder.Env{})
@@ -207,5 +211,7 @@ func (nwConfig *NwConfig) Load() {
 	err := config.AddStruct(nwConfig).Feed()
 	if err != nil {
 		log.Fatal().Err(err).Msg("reading .env file")
+	} else {
+		log.Debug().Msg("config loaded")
 	}
 }

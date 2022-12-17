@@ -56,12 +56,16 @@ func init() {
 		db, err = gorm.Open(sqlite.Open(config.Database.Sqlite.Dsn), &gormConfig)
 		if err != nil {
 			log.Fatal().Err(err).Msg("cannot connect to Sqlite database")
+		} else {
+			log.Debug().Msgf("Opened sqlite database at %s", config.Database.Sqlite.Dsn)
 		}
 		sqlDb, _ = db.DB()
 	} else if config.Database.DbType == nwConfig.Mysql {
 		db, err = gorm.Open(mysql.Open(config.Database.Mysql.Dsn), &gormConfig)
 		if err != nil {
 			log.Fatal().Err(err).Msg("cannot connect to Mysql database")
+		} else {
+			log.Debug().Msgf("Opened Mysql database at %s", config.Database.Mysql.Dsn)
 		}
 		sqlDb, _ = db.DB()
 		sqlDb.SetConnMaxLifetime(time.Minute * 3)
@@ -71,6 +75,8 @@ func init() {
 		db, err = gorm.Open(mysql.Open(config.Database.Mariadb.Dsn), &gormConfig)
 		if err != nil {
 			log.Fatal().Err(err).Msg("cannot connect to Mariadb database")
+		} else {
+			log.Debug().Msgf("Opened Mariadb database at %s", config.Database.Mariadb.Dsn)
 		}
 		sqlDb, _ = db.DB()
 		sqlDb.SetConnMaxLifetime(time.Minute * 3)
@@ -80,6 +86,8 @@ func init() {
 		db, err = gorm.Open(postgres.Open(config.Database.Postgres.Dsn), &gormConfig)
 		if err != nil {
 			log.Fatal().Err(err).Msg("cannot connect to Postgresql database")
+		} else {
+			log.Debug().Msgf("Opened Postgres database at %s", config.Database.Postgres.Dsn)
 		}
 	}
 
@@ -89,6 +97,7 @@ func init() {
 	// Enable debug mode while in development
 	if config.Environment == "development" {
 		db = db.Debug()
+		log.Debug().Msg("Environment set to development")
 	}
 
 	// try to establish connection
