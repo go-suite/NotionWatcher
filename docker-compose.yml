@@ -8,8 +8,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - NW_ENV=production
     volumes:
       - ./.env:/NotionWatcher/.env
-      - ./data:/NotionWatcher/data
+      - ./data/watchers:/NotionWatcher/watchers
+      - ./data/data:/NotionWatcher/data
+      - ./data/logs:/NotionWatcher/logs

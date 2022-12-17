@@ -143,7 +143,7 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,go,goland+all
 
-.env.example
+.env.dev
 .env.production
 *.log
 build/

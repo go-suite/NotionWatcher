@@ -40,7 +40,10 @@ RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
 WORKDIR /NotionWatcher
 
 # Copy the Pre-built binary file from the previous stage.
-COPY --from=builder /build/build/NotionWatcher /usr/local/bin/notionwatcher
+COPY --from=builder /build/build/NotionWatcher /NotionWatcher/notionwatcher
+
+# declare the volume to store the watchers
+VOLUME [ "/NotionWatcher/watchers" ]
 
 # declare the volume to store the list of users
 VOLUME [ "/NotionWatcher/data" ]
@@ -49,4 +52,4 @@ VOLUME [ "/NotionWatcher/data" ]
 VOLUME [ "/NotionWatcher/logs" ]
 
 # Command to run the executable
-CMD ["notionwatcher", "watch"]
+CMD ["/NotionWatcher/notionwatcher", "watch"]
