@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	nwConfig "github.com/gennesseaux/NotionWatcher/setup/config"
+	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
 	"github.com/go-co-op/gocron"
 	log "github.com/go-mods/zerolog-quick"
 	"github.com/spf13/cobra"

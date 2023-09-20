@@ -1,12 +1,12 @@
-package common
+package watcher
 
 import (
 	"context"
 	"github.com/dstotijn/go-notion"
-	wdb "github.com/gennesseaux/NotionWatcher/common/db"
-	"github.com/gennesseaux/NotionWatcher/common/event"
-	"github.com/gennesseaux/NotionWatcher/common/webhook"
-	nwDatasource "github.com/gennesseaux/NotionWatcher/setup/datasource"
+	"github.com/gennesseaux/NotionWatcher/modules/database/models"
+	nwDatasource "github.com/gennesseaux/NotionWatcher/modules/datasource"
+	"github.com/gennesseaux/NotionWatcher/modules/event"
+	"github.com/gennesseaux/NotionWatcher/modules/webhook"
 	log "github.com/go-mods/zerolog-quick"
 	"gorm.io/gorm/clause"
 	"time"
@@ -15,7 +15,7 @@ import (
 // datasource : datasource
 var datasource = nwDatasource.Datasource
 
-func (w *Watcher) sendWebHook(database *wdb.Database, id string) (err error) {
+func (w *Watcher) sendWebHook(database *models.Database, id string) (err error) {
 	log.Debug().Msgf("Sending webhook for %s to url: %s", w.Name, w.WebHook)
 
 	evt := event.Event{
@@ -29,17 +29,17 @@ func (w *Watcher) sendWebHook(database *wdb.Database, id string) (err error) {
 		},
 	}
 
-	return webhook.SendMessage(w.WebHook, evt)
+	return webhook.PostHook(w.WebHook, evt)
 }
 
 func (w *Watcher) prepareDatabaseWatcher() (err error) {
 
 	// Database object
-	database := &wdb.Database{UUID: w.DatabaseId}
+	database := &models.Database{UUID: w.DatabaseId}
 	datasource.DB().Find(&database, database)
 
 	// Database watcher objects
-	databaseWatcher := &wdb.DatabaseWatcher{Name: w.Name}
+	databaseWatcher := &models.DatabaseWatcher{Name: w.Name}
 	datasource.DB().Preload(clause.Associations).Find(&databaseWatcher, databaseWatcher)
 
 	// Update the database object
@@ -64,7 +64,7 @@ func (w *Watcher) prepareDatabaseWatcher() (err error) {
 func (w *Watcher) runDatabaseWatcher() (err error) {
 
 	// Get the latest information stored in DatabaseWatcher table
-	dw := &wdb.DatabaseWatcher{Name: w.Name}
+	dw := &models.DatabaseWatcher{Name: w.Name}
 	err = datasource.DB().Preload(clause.Associations).Find(&dw, dw).Error
 	if err != nil {
 		return err

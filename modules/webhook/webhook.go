@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/gennesseaux/NotionWatcher/common/event"
+	"github.com/gennesseaux/NotionWatcher/modules/event"
 	log "github.com/go-mods/zerolog-quick"
 	"io"
 	"net/http"
 	"strings"
 )
 
-func SendMessage(url string, event event.Event) error {
+// PostHook : post event to webhook
+func PostHook(url string, event event.Event) error {
 	payload := new(bytes.Buffer)
 
 	err := json.NewEncoder(payload).Encode(event)

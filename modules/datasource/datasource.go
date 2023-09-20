@@ -3,8 +3,8 @@ package datasource
 import (
 	"context"
 	"database/sql"
-	wdb "github.com/gennesseaux/NotionWatcher/common/db"
-	nwConfig "github.com/gennesseaux/NotionWatcher/setup/config"
+	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
+	"github.com/gennesseaux/NotionWatcher/modules/database/models"
 	loggorm "github.com/go-mods/zerolog-gorm"
 	log "github.com/go-mods/zerolog-quick"
 	"github.com/rs/zerolog"
@@ -110,8 +110,8 @@ func init() {
 
 	// Migrate models to database
 	err = db.AutoMigrate(
-		&wdb.Database{},
-		&wdb.DatabaseWatcher{},
+		&models.Database{},
+		&models.DatabaseWatcher{},
 	)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot migrate database")

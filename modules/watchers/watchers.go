@@ -2,8 +2,8 @@ package watchers
 
 import (
 	"errors"
-	"github.com/gennesseaux/NotionWatcher/common"
-	nwConfig "github.com/gennesseaux/NotionWatcher/setup/config"
+	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
+	"github.com/gennesseaux/NotionWatcher/modules/watcher"
 	log "github.com/go-mods/zerolog-quick"
 	"github.com/go-playground/validator/v10"
 	c "github.com/golobby/config/v3"
@@ -17,7 +17,7 @@ import (
 var config = nwConfig.Config
 
 type Watchers struct {
-	Watchers []*common.Watcher
+	Watchers []*watcher.Watcher
 }
 
 var Nw *Watchers
@@ -58,7 +58,7 @@ func (nw *Watchers) Load() {
 	// Convert json files to Watcher object
 	for _, file := range files {
 		// Create an instance of a watcher struct
-		watcher := common.Watcher{}
+		watcher := watcher.Watcher{}
 		// Unmarshal
 		err := c.New().AddFeeder(feeder.Json{Path: filepath.Join(config.WatchersPath, file)}).AddStruct(&watcher).Feed()
 		if err != nil {
@@ -77,7 +77,7 @@ func (nw *Watchers) Load() {
 	}
 }
 
-func (nw *Watchers) Get(name string) *common.Watcher {
+func (nw *Watchers) Get(name string) *watcher.Watcher {
 	for _, w := range nw.Watchers {
 		if w.Name == name {
 			return w
@@ -86,11 +86,11 @@ func (nw *Watchers) Get(name string) *common.Watcher {
 	return nil
 }
 
-func (nw *Watchers) Add(watcher *common.Watcher) {
+func (nw *Watchers) Add(watcher *watcher.Watcher) {
 	nw.Watchers = append(nw.Watchers, watcher)
 }
 
-func (nw *Watchers) Remove(watcher *common.Watcher) {
+func (nw *Watchers) Remove(watcher *watcher.Watcher) {
 	for i, w := range nw.Watchers {
 		if w.Name == watcher.Name {
 			nw.Watchers = append(nw.Watchers[:i], nw.Watchers[i+1:]...)

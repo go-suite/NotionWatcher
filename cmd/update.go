@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"errors"
-	"github.com/gennesseaux/NotionWatcher/common/event"
-	nwConfig "github.com/gennesseaux/NotionWatcher/setup/config"
+	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
+	"github.com/gennesseaux/NotionWatcher/modules/event"
 	log "github.com/go-mods/zerolog-quick"
 	"github.com/spf13/cobra"
 	"time"

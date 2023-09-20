@@ -1,10 +1,10 @@
-package common
+package watcher
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gennesseaux/NotionWatcher/common/event"
+	"github.com/gennesseaux/NotionWatcher/modules/event"
 	"github.com/go-co-op/gocron"
 	log "github.com/go-mods/zerolog-quick"
 	"github.com/rs/zerolog"

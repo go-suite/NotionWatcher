@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	nwConfig "github.com/gennesseaux/NotionWatcher/setup/config"
+	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/spf13/cobra"

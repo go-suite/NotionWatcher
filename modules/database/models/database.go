@@ -1,4 +1,4 @@
-package db
+package models
 
 // Database : Represent a db database
 // ref: https://developers.notion.com/reference/database

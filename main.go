@@ -5,7 +5,7 @@ import (
 	"os"
 
 	// Call implicit init methods
-	_ "github.com/gennesseaux/NotionWatcher/setup"
+	_ "github.com/gennesseaux/NotionWatcher/modules"
 )
 
 func main() {

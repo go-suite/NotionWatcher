@@ -1,11 +1,11 @@
-package common
+package watcher
 
 import (
 	"context"
 	"errors"
 	"github.com/dstotijn/go-notion"
-	"github.com/gennesseaux/NotionWatcher/common/event"
-	nwConfig "github.com/gennesseaux/NotionWatcher/setup/config"
+	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
+	"github.com/gennesseaux/NotionWatcher/modules/event"
 	"github.com/go-playground/validator/v10"
 	"time"
 )
@@ -13,6 +13,7 @@ import (
 // config : instance of Config
 var config = nwConfig.Config
 
+// Watcher is a struct that represents a watcher
 type Watcher struct {
 	Name         string     `json:"name" validate:"required"`
 	Type         event.Type `json:"type" validate:"required,oneof=pageAddedToDatabase pageUpdatedInDatabase"`
@@ -25,6 +26,8 @@ type Watcher struct {
 	Inactive     bool
 }
 
+// Validate validates the watcher,
+// if the validation fails, an error is returned
 func (w *Watcher) Validate() error {
 	// Token
 	if len(w.Token) == 0 {

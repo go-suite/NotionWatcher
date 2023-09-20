@@ -23,7 +23,7 @@ const (
 	Postgresql string = "postgresql"
 )
 
-// NwConfig : stores all configuration of the application.
+// NwConfig : stores the configuration of the application.
 // The values are read from a config file or environment variable.
 type NwConfig struct {
 

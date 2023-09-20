@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"errors"
-	"github.com/gennesseaux/NotionWatcher/common"
-	nwConfig "github.com/gennesseaux/NotionWatcher/setup/config"
+	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
+	"github.com/gennesseaux/NotionWatcher/modules/watcher"
 	log "github.com/go-mods/zerolog-quick"
 	"github.com/spf13/cobra"
 )
@@ -37,7 +37,7 @@ func (o *deleteOptions) deleteCmd(cmd *cobra.Command, args []string) (err error)
 		return errors.New("this watcher does not exist")
 	}
 
-	w := &common.Watcher{
+	w := &watcher.Watcher{
 		Name: args[0],
 	}
 

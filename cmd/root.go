@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/gennesseaux/NotionWatcher/setup/version"
-	nwWatcher "github.com/gennesseaux/NotionWatcher/setup/watchers"
+	"github.com/gennesseaux/NotionWatcher/modules/version"
+	nwWatcher "github.com/gennesseaux/NotionWatcher/modules/watchers"
 	"github.com/spf13/cobra"
 )
 

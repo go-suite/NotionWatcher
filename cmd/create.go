@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"errors"
-	"github.com/gennesseaux/NotionWatcher/common"
-	"github.com/gennesseaux/NotionWatcher/common/event"
-	nwConfig "github.com/gennesseaux/NotionWatcher/setup/config"
+	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
+	"github.com/gennesseaux/NotionWatcher/modules/event"
+	"github.com/gennesseaux/NotionWatcher/modules/watcher"
 	log "github.com/go-mods/zerolog-quick"
 	"github.com/spf13/cobra"
 	"time"
@@ -73,7 +73,7 @@ func (o *createOptions) createCmd(cmd *cobra.Command, args []string) (err error)
 	}
 
 	// Create new watcher
-	w := &common.Watcher{
+	w := &watcher.Watcher{
 		Name:       args[0],
 		Type:       eType,
 		DatabaseId: o.DatabaseId,

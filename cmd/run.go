@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"errors"
-	nwConfig "github.com/gennesseaux/NotionWatcher/setup/config"
+	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
 	"github.com/spf13/cobra"
 )
 
