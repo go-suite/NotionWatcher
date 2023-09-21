@@ -21,6 +21,7 @@ type Watcher struct {
 	DatabaseName string     `json:"database_name"`
 	StartDate    *time.Time `json:"start_date"`
 	WebHook      string     `json:"webhook"  validate:"required,url"`
+	WebHookTest  string     `json:"webhook_test"  validate:"omitempty,url"`
 	Cron         string     `json:"cron" validate:"omitempty"`
 	Token        string     `json:"token" validate:"required"`
 	Inactive     bool

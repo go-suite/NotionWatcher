@@ -37,8 +37,8 @@ BUILD_FOLDER        := ${BASE_BUILD_FOLDER}
 
 ## Custom build flags
 LDFLAGS := -w -s
-LDFLAGS += -X "${MODULE}/setup/version.Version=${VERSION}"
-LDFLAGS += -X "${MODULE}/setup/version.BuildDate=${BUILD_DATE}"
+LDFLAGS += -X "${MODULE}/modules/version.Version=${VERSION}"
+LDFLAGS += -X "${MODULE}/modules/version.BuildDate=${BUILD_DATE}"
 LDFLAGS += -linkmode external -extldflags "-static"
 LDFLAGS += $(EXT_LDFLAGS)
 

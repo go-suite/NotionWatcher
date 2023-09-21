@@ -22,6 +22,7 @@ func PostHook(url string, event event.Event) error {
 
 	log.Debug().Msgf("POST %v", strings.Trim(payload.String(), " \r\n"))
 
+	// #nosec:G107
 	resp, err := http.Post(url, "application/json", payload)
 	if err != nil {
 		return err

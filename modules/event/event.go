@@ -46,6 +46,16 @@ func ParseType(s string) (t Type, err error) {
 	return t, nil
 }
 
+// MustParseType parses a string into a Type
+// If the parsing fails, it panics
+func MustParseType(s string) Type {
+	t, err := ParseType(s)
+	if err != nil {
+		panic(err)
+	}
+	return t
+}
+
 func (c Type) String() string {
 	return string(c)
 }

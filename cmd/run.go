@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"errors"
+	"fmt"
 	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
 	"github.com/spf13/cobra"
 )
@@ -10,6 +10,7 @@ type runOptions struct {
 	config *nwConfig.NwConfig
 
 	WebHook string
+	Test    bool
 }
 
 func newRunCmd() *cobra.Command {
@@ -26,24 +27,26 @@ func newRunCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE:  o.runCmd,
 	}
+
 	//
 	runCmd.SilenceUsage = true
 
-	//
+	// Command flags
 	runCmd.Flags().StringVarP(&o.WebHook, "hook", "", "", "WebHook to call on update")
+	runCmd.Flags().BoolVarP(&o.Test, "test", "", false, "Use the test the WebHook")
 
 	return runCmd
 }
 
 func (o *runOptions) runCmd(cmd *cobra.Command, args []string) (err error) {
 
-	// Get the watcher
+	// Get the watcher or return an error
 	w := watchers.Get(args[0])
 	if w == nil {
-		return errors.New("this watcher does not exist")
+		return fmt.Errorf("the watcher %s does not exist", args[0])
 	}
 
-	//
+	// Parse the WebHook if provided
 	if cmd.Flags().Changed("hook") {
 		w.WebHook = o.WebHook
 	}
@@ -55,5 +58,8 @@ func (o *runOptions) runCmd(cmd *cobra.Command, args []string) (err error) {
 	}
 
 	// Run the watcher
+	if o.Test {
+		return w.RunTest()
+	}
 	return w.Run()
 }

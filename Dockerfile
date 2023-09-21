@@ -1,5 +1,5 @@
 # Start from golang base image to build the server
-FROM golang:1.19-alpine as builder
+FROM golang:1.21-alpine as builder
 
 # Tools needed to compile
 RUN apk update && apk add --no-cache git make gcc g++ musl-dev binutils autoconf automake libtool pkgconfig check-dev file patch

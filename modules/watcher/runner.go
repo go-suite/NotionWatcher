@@ -15,7 +15,7 @@ import (
 // datasource : datasource
 var datasource = nwDatasource.Datasource
 
-func (w *Watcher) sendWebHook(database *models.Database, id string) (err error) {
+func (w *Watcher) postWebHook(database *models.Database, id string) (err error) {
 	log.Debug().Msgf("Sending webhook for %s to url: %s", w.Name, w.WebHook)
 
 	evt := event.Event{
@@ -86,7 +86,7 @@ func (w *Watcher) runDatabaseWatcher() (err error) {
 	var results []notion.Page
 
 	//
-	var hasMore = true
+	var hasMore bool
 
 	// Query sent to notion
 	query := &notion.DatabaseQuery{
@@ -148,7 +148,7 @@ func (w *Watcher) runDatabaseWatcher() (err error) {
 	// Process results
 	for _, result := range results {
 		// Call the web hook
-		err = w.sendWebHook(&dw.Database, result.ID)
+		err = w.postWebHook(&dw.Database, result.ID)
 		if err != nil {
 			return err
 		}

@@ -58,20 +58,20 @@ func (nw *Watchers) Load() {
 	// Convert json files to Watcher object
 	for _, file := range files {
 		// Create an instance of a watcher struct
-		watcher := watcher.Watcher{}
+		w := watcher.Watcher{}
 		// Unmarshal
-		err := c.New().AddFeeder(feeder.Json{Path: filepath.Join(config.WatchersPath, file)}).AddStruct(&watcher).Feed()
+		err := c.New().AddFeeder(feeder.Json{Path: filepath.Join(config.WatchersPath, file)}).AddStruct(&w).Feed()
 		if err != nil {
 			log.Fatal().Err(err).Msgf("cannot read watcher file : '%s'", file)
 		} else {
 			// Validate watcher
 			validate := validator.New()
-			err := validate.Struct(watcher)
+			err := validate.Struct(w)
 			if err != nil {
 				log.Fatal().Err(err).Msgf("cannot read watcher file : '%s'", file)
 			} else {
 				// Add the watcher to the array
-				nw.Watchers = append(nw.Watchers, &watcher)
+				nw.Watchers = append(nw.Watchers, &w)
 			}
 		}
 	}

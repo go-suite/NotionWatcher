@@ -149,3 +149,5 @@ fabric.properties
 build/
 data/
 *todo*
+secrets.txt
+commands.txt

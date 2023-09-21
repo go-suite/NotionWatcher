@@ -15,7 +15,7 @@ import (
 func (w *Watcher) Create() error {
 	file, _ := json.MarshalIndent(w, "", "  ")
 	fileName := fmt.Sprintf("%s.json", w.Name)
-	return os.WriteFile(filepath.Join(config.WatchersPath, fileName), file, 0644)
+	return os.WriteFile(filepath.Join(config.WatchersPath, fileName), file, 0644) // #nosec:G306
 }
 
 func (w *Watcher) Delete() error {
@@ -24,10 +24,26 @@ func (w *Watcher) Delete() error {
 }
 
 func (w *Watcher) Run() (err error) {
-	log.Info().Msgf("running watcher: %s", w.Name)
+	return w.run(false)
+}
+
+func (w *Watcher) RunTest() (err error) {
+	return w.run(true)
+}
+
+func (w *Watcher) run(useTestHook bool) (err error) {
+	// if in test mode, use the test hook
+	if useTestHook {
+		w.WebHook = w.WebHookTest
+		log.Info().Msgf("running watcher: %s in test mode", w.Name)
+	} else {
+		log.Info().Msgf("running watcher: %s", w.Name)
+	}
+
 	if w.Type == event.PageAddedToDatabase || w.Type == event.PageUpdatedInDatabase {
 		err = w.prepareDatabaseWatcher()
 		if err != nil {
+			log.Error().Err(err).Msg(fmt.Sprintf("failed to prepare database watcher: %s", w.Name))
 			return err
 		}
 		err = w.runDatabaseWatcher()
