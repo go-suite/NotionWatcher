@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
 	"github.com/gennesseaux/NotionWatcher/modules/event"
 	"github.com/gennesseaux/NotionWatcher/modules/watcher"
@@ -56,7 +57,7 @@ func (o *quickRunOptions) runCmd(_ *cobra.Command, _ []string) (err error) {
 
 	// Validate the watcher and return an error if it's not valid
 	if err = w.Validate(); err != nil {
-		return
+		return fmt.Errorf("failed to validate the watcher: %s", err.Error())
 	}
 
 	// Run the watcher

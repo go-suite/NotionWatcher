@@ -110,10 +110,9 @@ func (o *updateOptions) updateCmd(cmd *cobra.Command, args []string) (err error)
 		w.Inactive = o.Inactive
 	}
 
-	// Validate the watcher
-	err = w.Validate()
-	if err != nil {
-		return err
+	// Validate the watcher and return an error if it's not valid
+	if err = w.Validate(); err != nil {
+		return fmt.Errorf("failed to validate the watcher: %s", err.Error())
 	}
 
 	// Update the watcher

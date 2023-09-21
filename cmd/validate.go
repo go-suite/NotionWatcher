@@ -40,10 +40,9 @@ func (o *validateOptions) validateCmd(_ *cobra.Command, args []string) (err erro
 		return fmt.Errorf("the watcher %s does not exist", args[0])
 	}
 
-	// Validate the watcher and return an error if it fails
-	err = w.Validate()
-	if err != nil {
-		return fmt.Errorf("failed to validate the watcher %s: %s", args[0], err.Error())
+	// Validate the watcher and return an error if it's not valid
+	if err = w.Validate(); err != nil {
+		return fmt.Errorf("failed to validate the watcher: %s", err.Error())
 	}
 
 	log.Info().Msg("Watcher validated successfully!")

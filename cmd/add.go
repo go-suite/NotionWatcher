@@ -73,7 +73,10 @@ func (o *addOptions) addCmd(_ *cobra.Command, args []string) (err error) {
 	}
 
 	// Parse the type
-	eType, _ := event.ParseType(o.Type)
+	eType, err := event.ParseType(o.Type)
+	if err != nil {
+		return fmt.Errorf("failed to parse the type: %s", err.Error())
+	}
 
 	// Parse the start date
 	startDate, err := time.Parse(o.DateLayout, o.StartDate)
@@ -95,10 +98,9 @@ func (o *addOptions) addCmd(_ *cobra.Command, args []string) (err error) {
 		Inactive:    o.Inactive,
 	}
 
-	// Validate the watcher
-	err = w.Validate()
-	if err != nil {
-		return err
+	// Validate the watcher and return an error if it's not valid
+	if err = w.Validate(); err != nil {
+		return fmt.Errorf("failed to validate the watcher: %s", err.Error())
 	}
 
 	// Create the watcher and return an error if it fails
