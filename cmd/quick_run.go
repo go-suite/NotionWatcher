@@ -46,10 +46,16 @@ func newQuickRunCmd() *cobra.Command {
 
 func (o *quickRunOptions) runCmd(_ *cobra.Command, _ []string) (err error) {
 
+	// Check if the type is valid
+	eType, err := event.ParseType(o.Type)
+	if err != nil {
+		return fmt.Errorf("failed to parse the type: %s", err.Error())
+	}
+
 	// Create a new watcher based on parameters
 	w := watcher.Watcher{
 		Name:       "QuickWatcher",
-		Type:       event.MustParseType(o.Type),
+		Type:       eType,
 		DatabaseId: o.DatabaseId,
 		WebHook:    o.WebHook,
 		Token:      o.Token,

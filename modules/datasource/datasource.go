@@ -3,6 +3,7 @@ package datasource
 import (
 	"context"
 	"database/sql"
+	"errors"
 	nwConfig "github.com/gennesseaux/NotionWatcher/modules/config"
 	"github.com/gennesseaux/NotionWatcher/modules/database/models"
 	loggorm "github.com/go-mods/zerolog-gorm"
@@ -13,6 +14,8 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -53,6 +56,16 @@ func init() {
 	gormConfig := gorm.Config{Logger: &loggorm.GormLogger{}}
 
 	if config.Database.DbType == nwConfig.Sqlite3 {
+		// Get the database parent folder
+		pf := filepath.Dir(config.Database.Sqlite.Dsn)
+		// Create database file parent folder if not exists
+		if _, err := os.Stat(pf); errors.Is(err, os.ErrNotExist) {
+			err := os.MkdirAll(pf, os.ModePerm)
+			if err != nil {
+				log.Fatal().Err(err).Msg("cannot create database folder")
+			}
+		}
+		// Open the database
 		db, err = gorm.Open(sqlite.Open(config.Database.Sqlite.Dsn), &gormConfig)
 		if err != nil {
 			log.Fatal().Err(err).Msg("cannot connect to Sqlite database")

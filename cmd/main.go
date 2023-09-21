@@ -22,10 +22,9 @@ func newMainCmd() *cobra.Command {
 
 	// Create the root command
 	mainCmd := &cobra.Command{
-		Use:     "notion-watcher",
-		Aliases: []string{"nw"},
-		Short:   "NotionWatcher give the ability to watch a Notion database",
-		RunE:    o.mainCmd,
+		Use:   "NotionWatcher",
+		Short: "NotionWatcher give the ability to watch a Notion database",
+		RunE:  o.mainCmd,
 	}
 
 	mainCmd.SetVersionTemplate(`customized version: {{.Version}}`)

@@ -66,7 +66,10 @@ func (o *updateOptions) updateCmd(cmd *cobra.Command, args []string) (err error)
 
 	// Parse the type if provided
 	if cmd.Flags().Changed("type") {
-		eType, _ := event.ParseType(o.Type)
+		eType, err := event.ParseType(o.Type)
+		if err != nil {
+			return fmt.Errorf("failed to parse the type: %s", err.Error())
+		}
 		w.Type = eType
 	}
 
